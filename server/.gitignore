@@ -3,5 +3,3 @@
 **/dist
 **/build
 **/*.env
-**/*.d.ts
-prisma/runtime
