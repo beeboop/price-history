@@ -6,7 +6,7 @@ import CardsContainer from '../components/CardsContainer';
 import Fab from '../components/FloatingActionButton';
 
 const client = new ApolloClient({
-  uri: process.env.SERVER_URI || 'http://localhost:4000',
+  uri: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:4000/',
 });
 
 
