@@ -1,0 +1,11 @@
+https://www.prisma.io/docs/
+https://www.apollographql.com/docs/
+https://nextjs.org/docs/
+https://github.com/apollographql/fullstack-tutorial/tree/master/final/
+https://dashboard.heroku.com/account
+https://github.com/tannerlinsley/react-table/blob/master/docs/api/useTable.md
+https://github.com/tannerlinsley/react-table/blob/master/docs/examples/ui.md
+https://material-ui.com/components/tables/
+https://react-typescript-cheatsheet.netlify.app/docs/basic/setup
+https://formik.org/docs/overview
+https://github.com/howtographql/react-apollo
