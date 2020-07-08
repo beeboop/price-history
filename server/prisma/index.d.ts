@@ -776,12 +776,14 @@ export type User = {
   createdAt: Date
   email: string
   id: number
+  password: string
 }
 
 export type UserSelect = {
   createdAt?: boolean
   email?: boolean
   id?: boolean
+  password?: boolean
   record?: boolean | FindManyRecordArgs
 }
 
@@ -1187,6 +1189,7 @@ export type UserWhereInput = {
   createdAt?: Date | string | DateTimeFilter
   email?: string | StringFilter
   id?: number | IntFilter
+  password?: string | StringFilter
   record?: RecordFilter | null
   AND?: Enumerable<UserWhereInput>
   OR?: Array<UserWhereInput>
@@ -1221,6 +1224,7 @@ export type UserWhereUniqueInput = {
 export type UserCreateWithoutRecordInput = {
   createdAt?: Date | string
   email: string
+  password: string
 }
 
 export type UserCreateOneWithoutRecordInput = {
@@ -1243,6 +1247,7 @@ export type UserUpdateWithoutRecordDataInput = {
   createdAt?: Date | string
   email?: string
   id?: number
+  password?: string
 }
 
 export type UserUpsertWithoutRecordInput = {
@@ -1298,6 +1303,7 @@ export type RecordCreateManyWithoutUserInput = {
 export type UserCreateInput = {
   createdAt?: Date | string
   email: string
+  password: string
   record?: RecordCreateManyWithoutUserInput | null
 }
 
@@ -1370,6 +1376,7 @@ export type UserUpdateInput = {
   createdAt?: Date | string
   email?: string
   id?: number
+  password?: string
   record?: RecordUpdateManyWithoutUserInput
 }
 
@@ -1377,6 +1384,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Date | string
   email?: string
   id?: number
+  password?: string
 }
 
 export type DateTimeFilter = {
@@ -1442,6 +1450,7 @@ export type UserOrderByInput = {
   createdAt?: OrderByArg | null
   email?: OrderByArg | null
   id?: OrderByArg | null
+  password?: OrderByArg | null
 }
 
 /**

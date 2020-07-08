@@ -25,5 +25,6 @@ model User {
   createdAt DateTime @default(now())
   email     String   @unique
   id        Int      @default(autoincrement()) @id
+  password  String
   record    Record[]
 }
