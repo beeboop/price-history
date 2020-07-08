@@ -56,7 +56,7 @@ const typeDefs = gql`
       id: ID
     ): DeleteRecordResponse!
     signup(email: String!, password: String!): AuthPayload
-    login(email: String): AuthPayload
+    login(email: String, password: String!): AuthPayload
   }
 
   type Subscription {

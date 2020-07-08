@@ -12,9 +12,12 @@ const client = new ApolloClient({
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      height: '100vh',
+    },
     main: {
       marginBottom: theme.spacing(12),
-    },
+    }
   })
 );
 
@@ -22,7 +25,7 @@ export default function Home() {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.container}>
       <Head>
         <title>Price History</title>
         <link rel="icon" href="/favicon.ico" />

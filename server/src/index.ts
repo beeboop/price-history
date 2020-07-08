@@ -8,9 +8,12 @@ const prisma = new PrismaClient();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => ({
-    prisma,
-  }),
+  context: (integrationContext) => {
+    return {
+      authorization: integrationContext.req.get('Authorization'),
+      prisma,
+    };
+  },
 });
 
 server.listen({ port: process.env.PORT || '4000' }).then(({ url }) => {
