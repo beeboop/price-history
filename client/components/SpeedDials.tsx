@@ -10,10 +10,6 @@ import AddRecordDialog from './AddRecordDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      transform: 'translateZ(0px)',
-      flexGrow: 1,
-    },
     speedDial: {
       position: 'fixed',
       '&.MuiSpeedDial-directionUp': { // &.MuiSpeedDial-directionLeft
@@ -58,26 +54,24 @@ export default function SpeedDials() {
 
   return (
     <>
-      <div className={classes.root}>
-        <SpeedDial
-          ariaLabel="SpeedDial"
-          className={classes.speedDial}
-          icon={<SpeedDialIcon />}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          open={open}
-          direction={'up'}
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={action.onClick || handleClose}
-            />
-          ))}
-        </SpeedDial>
-      </div>
+      <SpeedDial
+        ariaLabel="SpeedDial"
+        className={classes.speedDial}
+        icon={<SpeedDialIcon />}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        open={open}
+        direction={'up'}
+      >
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={action.onClick || handleClose}
+          />
+        ))}
+      </SpeedDial>
       <AddRecordDialog
         open={ addDialogOpen }
         handleClose={ handleDialogClose }

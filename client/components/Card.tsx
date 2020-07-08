@@ -55,7 +55,7 @@ export default function Card({
                 {`$${price}`}
               </Typography>
               <Typography align="right" variant="body2" color="textSecondary">
-                {`${quantity} ${unit} @ $0.xxx/${unit}`}
+                {`${quantity} ${unit} @ $${(price/quantity).toFixed(2)}/${unit}`}
               </Typography>
             </Grid>
           </Grid>
