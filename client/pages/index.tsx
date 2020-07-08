@@ -1,27 +1,37 @@
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import Head from 'next/head';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import CardsContainer from '../components/CardsContainer';
-import Fab from '../components/FloatingActionButton';
+import SpeedDials from '../components/SpeedDials';
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:4000/',
 });
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    main: {
+      marginBottom: theme.spacing(12),
+    },
+  })
+);
 
 export default function Home() {
+  const classes = useStyles();
+
   return (
-    <div className="container">
+    <div>
       <Head>
-        <title>Create Next App</title>
+        <title>Price History</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <CssBaseline />
-      <main>
+      <main className={classes.main}>
         <ApolloProvider client={client}>
           <CardsContainer />
-          <Fab />
+          <SpeedDials />
         </ApolloProvider>
       </main>  
 

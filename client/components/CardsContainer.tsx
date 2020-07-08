@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     selected: {
       backgroundColor: theme.palette.info.light,
       borderColor: theme.palette.info.main,
-      borderWidth: 2,
+      borderWidth: 1,
     },
   })
 );
