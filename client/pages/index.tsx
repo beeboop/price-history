@@ -7,7 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { AUTH_TOKEN } from '../utils/constants';
 import CardsContainer from '../components/CardsContainer';
 import SpeedDials from '../components/SpeedDials';
-import Login from './login';
+import Login from '../components/login';
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:4000/',
