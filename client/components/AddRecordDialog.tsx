@@ -83,7 +83,6 @@ export default function AddRecordDialog({ open, handleClose }) {
         initialValues={{ product: "", location: "", price: "", quantity: "", unit: "" }}
         validationSchema={RecordSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log(values);
           const result = await createRecord({
             variables: {
               product: values.product,
@@ -93,7 +92,6 @@ export default function AddRecordDialog({ open, handleClose }) {
               unit: values.unit,
             },
           });
-          console.log('result:', result);
           handleClose();
           setTimeout(() => location.reload(), 500);
         }}

@@ -75,9 +75,9 @@ const resolvers = {
     deleteRecord: async (parent, { id }, { authorization, prisma }: Context) => {
       try {
         const userId = getUserId(authorization);
-        const record = await prisma.record.findOne({ where: { id: Number(id) } }).then(record => {
-          if (record) {
-            return prisma.record.delete({ where: { id: record.id }});
+        const record = await prisma.record.findMany({ where: { id: Number(id), authorId: userId } }).then(records => {
+          if (records?.[0]) {
+            return prisma.record.delete({ where: { id: records[0].id }});
           }
           throw new Error('unable to delete');
         });

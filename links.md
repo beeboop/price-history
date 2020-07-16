@@ -9,3 +9,6 @@ https://material-ui.com/components/tables/
 https://react-typescript-cheatsheet.netlify.app/docs/basic/setup
 https://formik.org/docs/overview
 https://github.com/howtographql/react-apollo
+https://www.howtographql.com/graphql-js/6-authentication/
+https://www.howtographql.com/react-apollo/5-authentication/
+https://vercel.com/beeboop/price-history
