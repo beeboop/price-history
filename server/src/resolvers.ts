@@ -17,10 +17,10 @@ const resolvers = {
   Query: {
     test: () => 'hello',
     records: async (parent, args, { authorization, prisma }: Context) => {
-      // const userId = getUserId(authorization);
-      // console.log('userId:', userId);
-      // const records = await prisma.user.findOne({ where: { id: userId }}).record();
-      const records = await prisma.record.findMany();
+      const userId = getUserId(authorization);
+      console.log('userId:', userId);
+      const records = await prisma.user.findOne({ where: { id: userId }}).record();
+      // const records = await prisma.record.findMany();
       return records;
     },
     users: async (parent, args, { prisma }: Context) => {

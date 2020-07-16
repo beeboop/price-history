@@ -26,7 +26,7 @@ export default function Card({
   onLongPress,
 }) {
   const classes = useStyles();
-  const longPressProps = useLongPress(onLongPress, 600);
+  const longPressProps = useLongPress(onLongPress, 400);
   const preventDefault = (e) => e.preventDefault();
 
   return (

@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { AUTH_TOKEN } from '../utils/constants';
 
 const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -43,7 +44,8 @@ export default function Login({
               password: values.password,
             },
           });
-          console.log('result:', result, setIsLoggedIn);
+          console.log('result:', result);
+          localStorage.setItem(AUTH_TOKEN, result.data.login.token);
           setIsLoggedIn(true);
         }}
       >
