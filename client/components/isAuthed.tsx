@@ -12,10 +12,10 @@ export default function withAuth(Component) {
   return function(props) {
     const { loading, error, data } = useQuery(IS_AUTH);
   
-    if (loading) return 'Loading....';
+    if (loading) return <>{ 'Loading....' }</>;
     if (error || !data.isAuth) {
       localStorage.removeItem(AUTH_TOKEN);
-      return 'Log in again';
+      return <>{ 'Log in again' } </>;
     }
   
     return <Component { ...props } />;
