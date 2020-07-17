@@ -6,6 +6,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/Filter';
 import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 import AddRecordDialog from './AddRecordDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +58,7 @@ export default function SpeedDials() {
       <SpeedDial
         ariaLabel="SpeedDial"
         className={classes.speedDial}
-        icon={<SpeedDialIcon />}
+        icon={<SpeedDialIcon icon={<SettingsIcon />} />}
         onClose={handleClose}
         onOpen={handleOpen}
         open={open}

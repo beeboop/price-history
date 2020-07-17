@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from './Card';
 import createRecordProps from '../utils/createRecordProps';
+import withAuth from './isAuthed';
 
 const ALL_RECORDS = gql`
   {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function CardsContainer() {
+export default withAuth(function CardsContainer() {
   const classes = useStyles();
   const [selectedRecords, setSelectedRecords] = React.useState(new Set());
   const { loading, error, data } = useQuery(ALL_RECORDS);
@@ -103,4 +104,4 @@ export default function CardsContainer() {
       </Button>}
     </>
   );
-};
+});

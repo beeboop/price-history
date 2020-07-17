@@ -27,7 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100vh',
     },
     main: {
-      marginBottom: theme.spacing(12),
+      paddingBottom: theme.spacing(12),
+      height: '100%',
+      display: 'flex',
     }
   })
 );

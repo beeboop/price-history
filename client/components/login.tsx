@@ -58,6 +58,7 @@ export default function Login({
               as={TextField}
               label="Email"
               margin="normal"
+              fullWidth
               InputLabelProps={{
                 shrink: true,
               }}
@@ -73,6 +74,7 @@ export default function Login({
               as={TextField}
               label="Passoword"
               margin="normal"
+              fullWidth
               type="password"
               InputLabelProps={{
                 shrink: true,
@@ -100,10 +102,13 @@ export default function Login({
           
         }
         .Form {
-          background: gray;
-          // position: fixed;
-          // top: 50%;
-          // left: 50%;
+          background-color: rgba(0,0,0, 0.5); /* Black w/opacity/see-through */
+          border: 3px solid #f1f1f1;
+          padding: 30px 20px;
+          margin: 60px;
+          justify-self: center;
+          align-self: center;
+          grid-template-columns: auto;
         }
       `}</style>
     </>

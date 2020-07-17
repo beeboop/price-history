@@ -35,12 +35,11 @@ const typeDefs = gql`
   }
 
   type Query {
-    test: String!
     records: [Record]!
     users: [User]!
     productRecords(product: String!): [Record]!
     record(id: ID!): Record
-    me: User
+    isAuth: Boolean!
   }
 
   type Mutation {

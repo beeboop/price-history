@@ -15,7 +15,6 @@ interface Context {
 
 const resolvers = {
   Query: {
-    test: () => 'hello',
     records: async (parent, args, { authorization, prisma }: Context) => {
       const userId = getUserId(authorization);
       console.log('userId:', userId);
@@ -48,6 +47,13 @@ const resolvers = {
       // return records;
       return [];
     },
+    isAuth: async (parent, args, { authorization }: Context) => {
+      try {
+        return !!getUserId(authorization);
+      } catch {
+        return false;
+      }
+    }
   },
 
   Mutation: {
