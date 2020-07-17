@@ -72,7 +72,7 @@ export default function Login({
                 errors.password && touched.password && errors.password
               }
               as={TextField}
-              label="Passoword"
+              label="Password"
               margin="normal"
               fullWidth
               type="password"
