@@ -9,16 +9,17 @@ datasource db {
 }
 
 model Record {
-  authorId  Int
-  createdAt DateTime @default(now())
-  id        Int      @default(autoincrement()) @id
-  isOnSale  Boolean  @default(false)
-  location  String
-  price     String
-  product   String
-  quantity  String
-  unit      String
-  user      User     @relation(fields: [authorId], references: [id])
+  authorId   Int
+  createdAt  DateTime  @default(now())
+  customdate DateTime?
+  id         Int       @default(autoincrement()) @id
+  isOnSale   Boolean   @default(false)
+  location   String
+  price      String
+  product    String
+  quantity   String
+  unit       String
+  user       User      @relation(fields: [authorId], references: [id])
 }
 
 model User {

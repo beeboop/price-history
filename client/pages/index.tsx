@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     main: {
       paddingBottom: theme.spacing(12),
-      height: '100%',
       display: 'flex',
       flexDirection: 'column',
     }

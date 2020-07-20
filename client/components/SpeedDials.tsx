@@ -4,7 +4,7 @@ import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddIcon from '@material-ui/icons/Add';
-import FilterIcon from '@material-ui/icons/Filter';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AddRecordDialog from './AddRecordDialog';
@@ -50,7 +50,7 @@ export default function SpeedDials() {
   const actions = [
     { icon: <AddIcon />, name: 'Add', onClick: handleDialogOpen },
     { icon: <SearchIcon />, name: 'Search' },
-    { icon: <FilterIcon />, name: 'Filter' },
+    { icon: <FilterListIcon />, name: 'Filter' },
   ];
 
   return (

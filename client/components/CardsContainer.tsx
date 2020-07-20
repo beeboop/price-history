@@ -18,7 +18,7 @@ const ALL_RECORDS = gql`
       price
       quantity
       unit
-      createdAt
+      date
     }
   }
 `;

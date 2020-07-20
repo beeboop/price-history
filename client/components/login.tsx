@@ -91,8 +91,11 @@ export default function Login({
         body {
           background: url("/loginBackground.jpg") no-repeat center;
         }
+        main {
+          height: 100%;
+        }
         .Backdrop {
-          background-color: rgba(255, 255, 255, 0.7);
+          background-color: rgba(0, 0, 0, 0.7);
           position: fixed;
           top: 0;
           left: 0;
@@ -102,13 +105,11 @@ export default function Login({
           
         }
         .Form {
-          background-color: rgba(0,0,0, 0.5); /* Black w/opacity/see-through */
+          background-color: rgba(255, 255, 255, 0.6); /* Black w/opacity/see-through */
           border: 3px solid #f1f1f1;
           padding: 30px 20px;
-          margin: 60px;
-          justify-self: center;
+          margin: auto 60px;
           align-self: center;
-          grid-template-columns: auto;
         }
       `}</style>
     </>

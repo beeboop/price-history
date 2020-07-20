@@ -52,24 +52,28 @@ const RecordSchema = Yup.object().shape({
     .min(2, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
+  date: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
 });
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
+    qtyUnitContainer: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gridColumnGap: theme.spacing(3),
+      paddingRight: theme.spacing(10),
+    }
   })
 );
+
+const FormatMmSlashDdSlashYyyy = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
 export default function AddRecordDialog({ open, handleClose }) {
   const classes = useStyles();
   const [createRecord] = useMutation(CREATE_RECORD);
+  const now = new Date();
 
   return (
     <Dialog
@@ -80,7 +84,7 @@ export default function AddRecordDialog({ open, handleClose }) {
     >
       <DialogTitle>Add Record</DialogTitle>
       <Formik
-        initialValues={{ product: "", location: "", price: "", quantity: "", unit: "" }}
+        initialValues={{ product: "", location: "", price: "", quantity: "", unit: "", date: FormatMmSlashDdSlashYyyy.format(now) }}
         validationSchema={RecordSchema}
         onSubmit={async (values, { setSubmitting }) => {
           const result = await createRecord({
@@ -90,6 +94,7 @@ export default function AddRecordDialog({ open, handleClose }) {
               price: `${values.price}`,
               quantity: `${values.quantity}`,
               unit: values.unit,
+              date: new Date(values.date).getTime() / 1000,
             },
           });
           handleClose();
@@ -100,8 +105,24 @@ export default function AddRecordDialog({ open, handleClose }) {
           <Form>
             <DialogContent>
               <Field
+                name="date"
+                error={errors.date && touched.date}
+                helperText={
+                  errors.date && touched.date && errors.date
+                }
+                as={TextField}
+                label="Date"
+                placeholder={ FormatMmSlashDdSlashYyyy.format(now) }
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <Field
                 name="product"
                 error={errors.product && touched.product}
+                helperText={errors.product && touched.product && errors.product}
                 as={TextField}
                 label="Product"
                 placeholder="Organic Tomatoes"
@@ -110,7 +131,6 @@ export default function AddRecordDialog({ open, handleClose }) {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                helperText={errors.product && touched.product && errors.product}
                 autoFocus
               />
               <Field
@@ -128,6 +148,37 @@ export default function AddRecordDialog({ open, handleClose }) {
                   shrink: true,
                 }}
               />
+              <div className={ classes.qtyUnitContainer }>
+                <Field
+                  name="quantity"
+                  error={errors.quantity && touched.quantity}
+                  helperText={
+                    errors.quantity && touched.quantity && errors.quantity
+                  }
+                  as={TextField}
+                  label="Quantity"
+                  type="number"
+                  placeholder="2"
+                  margin="normal"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <Field
+                  name="unit"
+                  error={errors.unit && touched.unit}
+                  helperText={
+                    errors.unit && touched.unit && errors.unit
+                  }
+                  as={TextField}
+                  label="Unit"
+                  placeholder="lb"
+                  margin="normal"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </div>
               <Field
                 name="price"
                 error={errors.price && touched.price}
@@ -137,36 +188,7 @@ export default function AddRecordDialog({ open, handleClose }) {
                 as={TextField}
                 label="Price"
                 placeholder="5.00"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Field
-                name="quantity"
-                error={errors.quantity && touched.quantity}
-                helperText={
-                  errors.quantity && touched.quantity && errors.quantity
-                }
-                as={TextField}
-                label="Quantity"
-                placeholder="2"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Field
-                name="unit"
-                error={errors.unit && touched.unit}
-                helperText={
-                  errors.unit && touched.unit && errors.unit
-                }
-                as={TextField}
-                label="Unit"
-                placeholder="lb"
+                type="number"
                 fullWidth
                 margin="normal"
                 InputLabelProps={{

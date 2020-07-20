@@ -26,7 +26,7 @@ export { sql, empty, join, raw }
 
 /**
  * Prisma Client JS version: 2.1.3
- * Query Engine version: 363f5a521d6b06543e53d134652a0037a3096d41
+ * Query Engine version: 45c4da4dd3ccd6a322796b228bdf937c7ce884e8
  */
 export declare type PrismaVersion = {
   client: string
@@ -353,6 +353,7 @@ export declare type OrderByArg = (typeof OrderByArg)[keyof typeof OrderByArg]
 export type Record = {
   authorId: number
   createdAt: Date
+  customdate: Date | null
   id: number
   isOnSale: boolean
   location: string
@@ -365,6 +366,7 @@ export type Record = {
 export type RecordSelect = {
   authorId?: boolean
   createdAt?: boolean
+  customdate?: boolean
   id?: boolean
   isOnSale?: boolean
   location?: boolean
@@ -1199,6 +1201,7 @@ export type UserWhereInput = {
 export type RecordWhereInput = {
   authorId?: number | IntFilter
   createdAt?: Date | string | DateTimeFilter
+  customdate?: Date | string | NullableDateTimeFilter | null
   id?: number | IntFilter
   isOnSale?: boolean | BooleanFilter
   location?: string | StringFilter
@@ -1234,6 +1237,7 @@ export type UserCreateOneWithoutRecordInput = {
 
 export type RecordCreateInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   isOnSale?: boolean
   location: string
   price: string
@@ -1264,6 +1268,7 @@ export type UserUpdateOneRequiredWithoutRecordInput = {
 
 export type RecordUpdateInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   id?: number
   isOnSale?: boolean
   location?: string
@@ -1271,11 +1276,12 @@ export type RecordUpdateInput = {
   product?: string
   quantity?: string
   unit?: string
-  user?: UserUpdateOneRequiredWithoutRecordInput
+  user?: UserUpdateOneRequiredWithoutRecordInput | null
 }
 
 export type RecordUpdateManyMutationInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   id?: number
   isOnSale?: boolean
   location?: string
@@ -1287,6 +1293,7 @@ export type RecordUpdateManyMutationInput = {
 
 export type RecordCreateWithoutUserInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   isOnSale?: boolean
   location: string
   price: string
@@ -1309,6 +1316,7 @@ export type UserCreateInput = {
 
 export type RecordUpdateWithoutUserDataInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   id?: number
   isOnSale?: boolean
   location?: string
@@ -1326,6 +1334,7 @@ export type RecordUpdateWithWhereUniqueWithoutUserInput = {
 export type RecordScalarWhereInput = {
   authorId?: number | IntFilter
   createdAt?: Date | string | DateTimeFilter
+  customdate?: Date | string | NullableDateTimeFilter | null
   id?: number | IntFilter
   isOnSale?: boolean | BooleanFilter
   location?: string | StringFilter
@@ -1340,6 +1349,7 @@ export type RecordScalarWhereInput = {
 
 export type RecordUpdateManyDataInput = {
   createdAt?: Date | string
+  customdate?: Date | string | null
   id?: number
   isOnSale?: boolean
   location?: string
@@ -1367,7 +1377,7 @@ export type RecordUpdateManyWithoutUserInput = {
   disconnect?: Enumerable<RecordWhereUniqueInput>
   delete?: Enumerable<RecordWhereUniqueInput>
   update?: Enumerable<RecordUpdateWithWhereUniqueWithoutUserInput>
-  updateMany?: Enumerable<RecordUpdateManyWithWhereNestedInput>
+  updateMany?: Enumerable<RecordUpdateManyWithWhereNestedInput> | null
   deleteMany?: Enumerable<RecordScalarWhereInput>
   upsert?: Enumerable<RecordUpsertWithWhereUniqueWithoutUserInput>
 }
@@ -1377,7 +1387,7 @@ export type UserUpdateInput = {
   email?: string
   id?: number
   password?: string
-  record?: RecordUpdateManyWithoutUserInput
+  record?: RecordUpdateManyWithoutUserInput | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -1429,6 +1439,17 @@ export type RecordFilter = {
   none?: RecordWhereInput
 }
 
+export type NullableDateTimeFilter = {
+  equals?: Date | string | null
+  not?: Date | string | null | NullableDateTimeFilter
+  in?: Enumerable<Date | string> | null
+  notIn?: Enumerable<Date | string> | null
+  lt?: Date | string | null
+  lte?: Date | string | null
+  gt?: Date | string | null
+  gte?: Date | string | null
+}
+
 export type BooleanFilter = {
   equals?: boolean
   not?: boolean | BooleanFilter
@@ -1437,6 +1458,7 @@ export type BooleanFilter = {
 export type RecordOrderByInput = {
   authorId?: OrderByArg | null
   createdAt?: OrderByArg | null
+  customdate?: OrderByArg | null
   id?: OrderByArg | null
   isOnSale?: OrderByArg | null
   location?: OrderByArg | null

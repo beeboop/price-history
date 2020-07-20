@@ -8,6 +8,7 @@ CREATE TABLE "public"."User" (
 CREATE TABLE "public"."Record" (
   id SERIAL PRIMARY KEY NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  customdate TIMESTAMP,
   product VARCHAR(255) NOT NULL,
   location VARCHAR(255) NOT NULL,
   price VARCHAR(255) NOT NULL,

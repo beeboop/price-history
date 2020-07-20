@@ -5,7 +5,7 @@ import {
   RecordCreateInput,
   RecordWhereInput,
 } from '../prisma';
-import objectValuesToLowerCase from './utils/objectValuesToLowerCase';
+// import objectValuesToLowerCase from './utils/objectValuesToLowerCase';
 import { APP_SECRET, getUserId } from './utils/auth';
 
 interface Context {
@@ -20,7 +20,13 @@ const resolvers = {
       console.log('userId:', userId);
       const records = await prisma.user.findOne({ where: { id: userId }}).record();
       // const records = await prisma.record.findMany();
-      return records;
+      const recordsWithDate = records.map(record => {
+        return {
+          ...record,
+          date: record.customdate || record.createdAt || 0,
+        };
+      });
+      return recordsWithDate;
     },
     users: async (parent, args, { prisma }: Context) => {
       const users = await prisma.user.findMany();
@@ -62,7 +68,8 @@ const resolvers = {
         const userId = getUserId(authorization);
         const record = await prisma.record.create({
           data: {
-            ...objectValuesToLowerCase(args),
+            // ...objectValuesToLowerCase(args),
+            ...args,
             user: { connect: { id: userId } },
           },
         });

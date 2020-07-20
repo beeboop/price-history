@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
   type Record {
     id: ID!
-    createdAt: String!
+    date: String!
     product: String!
     location: String!
     price: String!
@@ -49,7 +49,8 @@ const typeDefs = gql`
       price: String!,
       quantity: String!,
       unit: String!,
-      isOnSale: Boolean
+      isOnSale: Boolean,
+      date: String
     ): CreateRecordResponse!
     deleteRecord(
       id: ID
