@@ -6,6 +6,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { AUTH_TOKEN } from '../utils/constants';
 import CardsContainer from '../components/CardsContainer';
+import SearchContainer from '../components/SearchContainer';
 import SpeedDials from '../components/SpeedDials';
 import Login from '../components/login';
 
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Home() {
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem(AUTH_TOKEN));
@@ -54,8 +56,9 @@ export default function Home() {
           { !isLoggedIn ?
             <Login setIsLoggedIn={setIsLoggedIn} />
             : <>
+              { showSearch && <SearchContainer handleClose={ () => setShowSearch(false) } /> }
               <CardsContainer />
-              <SpeedDials />
+              <SpeedDials handleSearch={ () => setShowSearch(true) } />
             </>
           }
         </ApolloProvider>

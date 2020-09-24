@@ -28,14 +28,26 @@ const typeDefs = gql`
     message: String
     record: Record
   }
+
   type DeleteRecordResponse {
     success: Boolean!
     message: String
     record: Record
   }
 
+  input RecordOrderByInput {
+    date: Sort
+    product: Sort
+    location: Sort
+  }
+
+  enum Sort {
+    asc
+    desc
+  }
+
   type Query {
-    records: [Record]!
+    records(filter: String, orderBy: RecordOrderByInput): [Record]!
     users: [User]!
     productRecords(product: String!): [Record]!
     record(id: ID!): Record

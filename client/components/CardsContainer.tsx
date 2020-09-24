@@ -11,7 +11,7 @@ import withAuth from './isAuthed';
 
 const ALL_RECORDS = gql`
   {
-    records {
+    records(orderBy: { date: desc }) {
       id
       product
       location

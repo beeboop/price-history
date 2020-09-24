@@ -25,7 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function SpeedDials() {
+export default function SpeedDials({
+  handleSearch,
+}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
@@ -49,7 +51,7 @@ export default function SpeedDials() {
 
   const actions = [
     { icon: <AddIcon />, name: 'Add', onClick: handleDialogOpen },
-    { icon: <SearchIcon />, name: 'Search' },
+    { icon: <SearchIcon />, name: 'Search', onClick: () => { handleSearch(); handleClose(); } },
     { icon: <FilterListIcon />, name: 'Filter' },
   ];
 

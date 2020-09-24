@@ -15,11 +15,22 @@ interface Context {
 
 const resolvers = {
   Query: {
-    records: async (parent, args, { authorization, prisma }: Context) => {
+    records: async (parent, { filter, orderBy }, { authorization, prisma }: Context) => {
+      if (orderBy?.date) {
+        orderBy.createdAt = orderBy.date;
+        delete orderBy.date;
+      }
+
       const userId = getUserId(authorization);
-      console.log('userId:', userId);
-      const records = await prisma.user.findOne({ where: { id: userId }}).record();
-      // const records = await prisma.record.findMany();
+      const records = await prisma.user.findOne({ where: { id: userId }}).record({
+        where: {
+          OR: [
+            { product: { contains: filter }},
+            { location: { contains: filter }},
+          ],
+        },
+        orderBy: orderBy,
+      });
       const recordsWithDate = records.map(record => {
         return {
           ...record,

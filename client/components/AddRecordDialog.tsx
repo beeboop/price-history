@@ -68,7 +68,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const FormatMmSlashDdSlashYyyy = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+const formatYyyyDashMmDashDd = (date: Date): string => {
+  const yyyy = date.getUTCFullYear();
+  const mm = `${date.getUTCMonth()+1}`.padStart(2, '0');
+  const dd = `${date.getUTCDate()}`.padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 
 export default function AddRecordDialog({ open, handleClose }) {
   const classes = useStyles();
@@ -84,7 +90,7 @@ export default function AddRecordDialog({ open, handleClose }) {
     >
       <DialogTitle>Add Record</DialogTitle>
       <Formik
-        initialValues={{ product: "", location: "", price: "", quantity: "", unit: "", date: FormatMmSlashDdSlashYyyy.format(now) }}
+        initialValues={{ product: "", location: "", price: "", quantity: "", unit: "", date: formatYyyyDashMmDashDd(now) }}
         validationSchema={RecordSchema}
         onSubmit={async (values, { setSubmitting }) => {
           const result = await createRecord({
@@ -111,8 +117,8 @@ export default function AddRecordDialog({ open, handleClose }) {
                   errors.date && touched.date && errors.date
                 }
                 as={TextField}
+                type="date"
                 label="Date"
-                placeholder={ FormatMmSlashDdSlashYyyy.format(now) }
                 fullWidth
                 margin="normal"
                 InputLabelProps={{
