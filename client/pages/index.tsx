@@ -1,26 +1,14 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
 import Head from 'next/head';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { AUTH_TOKEN } from '../utils/constants';
+import Providers from '../components/Providers';
 import CardsContainer from '../components/CardsContainer';
 import SearchContainer from '../components/SearchContainer';
 import SpeedDials from '../components/SpeedDials';
-import Login from '../components/login';
-
-const client = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:4000/',
-  request: (operation) => {
-    const token = localStorage.getItem(AUTH_TOKEN);
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    });
-  }
-});
+import { LOGIN_STATE } from '../types/login';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,13 +24,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Home() {
+  const router = useRouter();
   const classes = useStyles();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [loginState, setLoginState] = useState<keyof typeof LOGIN_STATE>('LOADING');
+  // const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem(AUTH_TOKEN));
+    setLoginState(!!localStorage.getItem(AUTH_TOKEN) ? 'LOGGED_IN' : 'NOT_LOGGED_IN');
   }, []);
+
+  if (loginState === 'LOADING') {
+    return 'Loading';
+  }
+
+  if (loginState === 'NOT_LOGGED_IN') {
+    router.push('/login');
+    return null;
+  }
 
   return (
     <div className={classes.container}>
@@ -52,16 +50,10 @@ export default function Home() {
       </Head>
       <CssBaseline />
       <main className={classes.main}>
-        <ApolloProvider client={client}>
-          { !isLoggedIn ?
-            <Login setIsLoggedIn={setIsLoggedIn} />
-            : <>
-              { showSearch && <SearchContainer handleClose={ () => setShowSearch(false) } /> }
-              <CardsContainer />
-              <SpeedDials handleSearch={ () => setShowSearch(true) } />
-            </>
-          }
-        </ApolloProvider>
+        <Providers>
+          <CardsContainer />
+          <SpeedDials />
+        </Providers>
       </main>  
 
       <style jsx global>{`

@@ -1,0 +1,5 @@
+export enum LOGIN_STATE {
+  LOADING,
+  NOT_LOGGED_IN,
+  LOGGED_IN,
+};

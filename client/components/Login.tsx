@@ -1,3 +1,5 @@
+
+import { useRouter } from 'next/router'
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from "@material-ui/core/Button";
@@ -23,9 +25,8 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-export default function Login({
-  setIsLoggedIn
-}) {
+export default function Login() {
+  const router = useRouter();
   const [login] = useMutation(LOGIN);
 
   return (
@@ -37,21 +38,18 @@ export default function Login({
         }}
         validationSchema={LoginSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log('values:', values);
           const result = await login({
             variables: {
               email: values.email,
               password: values.password,
             },
           });
-          console.log('result:', result);
           localStorage.setItem(AUTH_TOKEN, result.data.login.token);
-          setIsLoggedIn(true);
+          router.push('/');
         }}
       >
         {({ errors, touched, isSubmitting }) => (
           <Form className="Form">
-            {/* <img src="/loginBackground.jpg" alt="background image" /> */}
             <Field
               name="email"
               error={errors.email && touched.email}

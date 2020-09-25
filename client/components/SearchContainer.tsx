@@ -1,17 +1,16 @@
-import React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import debounce from 'lodash.debounce';
 import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Button } from '@material-ui/core';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import CardsContainer from './CardsContainer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      zIndex: theme.zIndex.appBar,
-      background: 'gray', //theme.palette.background.default,
-      position: 'fixed',
-      height: '100%',
-      width: '100%',
+      background: theme.palette.background.default,
     },
     inputRoot: {
       color: 'inherit',
@@ -26,12 +25,15 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     search: {
-      position: 'relative',
+      position: 'sticky',
+      top: 0,
+      zIndex: theme.zIndex.appBar,
+      borderBottom: '1px solid black',
       borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
+      backgroundColor: theme.palette.common.white,
+      // '&:hover': {
+      //   backgroundColor: fade(theme.palette.common.white, 0.25),
+      // },
       marginRight: theme.spacing(2),
       marginLeft: 0,
       width: '100%',
@@ -52,10 +54,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+type SearchContainerProps = {
+  handleClose?: (...args: any[]) => any;
+}
+
 export default function SearchContainer({
   handleClose,
-}) {
+}: SearchContainerProps) {
+  const router = useRouter();
   const classes = useStyles();
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSetSearchValue = debounce(setSearchValue, 350);
 
   return (
     <Grid
@@ -71,10 +80,12 @@ export default function SearchContainer({
             root: classes.inputRoot,
             input: classes.inputInput,
           }}
-          inputProps={{ 'aria-label': 'search' }}
+          inputProps={{ 'aria-label': 'search', autoFocus: true }}
+          onChange={ e => debouncedSetSearchValue(e.target.value) }
         />
-        <Button onClick={ handleClose }>X</Button>
+        <Button onClick={ handleClose || router.back }>X</Button>
       </div>
+      { searchValue && <CardsContainer filter={ searchValue } /> }
     </Grid>
   );
 };

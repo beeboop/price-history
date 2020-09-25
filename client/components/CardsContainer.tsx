@@ -7,11 +7,13 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from './Card';
 import createRecordProps from '../utils/createRecordProps';
-import withAuth from './isAuthed';
 
 const ALL_RECORDS = gql`
-  {
-    records(orderBy: { date: desc }) {
+  query Records($filter: String) {
+    records(
+      orderBy: { date: desc }
+      filter: $filter
+    ) {
       id
       product
       location
@@ -47,10 +49,18 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default withAuth(function CardsContainer() {
+type CardsContainerProps = {
+  filter?: string;
+};
+
+export default function CardsContainer({
+  filter
+}: CardsContainerProps) {
   const classes = useStyles();
   const [selectedRecords, setSelectedRecords] = React.useState(new Set());
-  const { loading, error, data } = useQuery(ALL_RECORDS);
+  const { loading, error, data } = useQuery(ALL_RECORDS, {
+    variables: { filter },
+  });
   const [deleteRecord] = useMutation(DELETE_RECORD);
   const handleRecordClick = id => () => {
     if(selectedRecords.size) {
@@ -104,4 +114,4 @@ export default withAuth(function CardsContainer() {
       </Button>}
     </>
   );
-});
+};

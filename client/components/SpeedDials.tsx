@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -25,9 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function SpeedDials({
-  handleSearch,
-}) {
+export default function SpeedDials() {
+  const router = useRouter();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
@@ -51,7 +51,7 @@ export default function SpeedDials({
 
   const actions = [
     { icon: <AddIcon />, name: 'Add', onClick: handleDialogOpen },
-    { icon: <SearchIcon />, name: 'Search', onClick: () => { handleSearch(); handleClose(); } },
+    { icon: <SearchIcon />, name: 'Search', onClick: () => { router.push('/search') } },
     { icon: <FilterListIcon />, name: 'Filter' },
   ];
 
