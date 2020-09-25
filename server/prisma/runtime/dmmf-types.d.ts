@@ -23,6 +23,7 @@ export declare namespace DMMF {
         isEmbedded: boolean;
         dbName: string | null;
         fields: Field[];
+        fieldMap?: Record<string, Field>;
         uniqueFields: string[][];
         uniqueIndexes: uniqueIndex[];
         documentation?: string;
@@ -87,6 +88,7 @@ export declare namespace DMMF {
     interface OutputType {
         name: string;
         fields: SchemaField[];
+        fieldMap?: Record<string, SchemaField>;
         isEmbedded?: boolean;
     }
     interface SchemaField {
@@ -105,7 +107,9 @@ export declare namespace DMMF {
         isOrderType?: boolean;
         atLeastOne?: boolean;
         atMostOne?: boolean;
+        isOneOf?: boolean;
         fields: SchemaArg[];
+        fieldMap?: Record<string, SchemaArg>;
     }
     interface Mapping {
         model: string;

@@ -25,8 +25,8 @@ export { PrismaClientValidationError }
 export { sql, empty, join, raw }
 
 /**
- * Prisma Client JS version: 2.1.3
- * Query Engine version: 45c4da4dd3ccd6a322796b228bdf937c7ce884e8
+ * Prisma Client JS version: 2.5.0
+ * Query Engine version: 9a670138b1db276001d785a2adcba1584c869d24
  */
 export declare type PrismaVersion = {
   client: string
@@ -56,7 +56,6 @@ export declare interface JsonArray extends Array<JsonValue> {}
  * Matches any valid JSON value.
  */
 export declare type JsonValue = string | number | boolean | null | JsonObject | JsonArray
-
 
 /**
  * Same as JsonObject, but allows undefined
@@ -101,9 +100,15 @@ export declare type PromiseReturnType<T extends (...args: any) => Promise<any>> 
 
 export declare type Enumerable<T> = T | Array<T>;
 
-export declare type TrueKeys<T> = {
+export type RequiredKeys<T> = {
+  [K in keyof T]-?: {} extends Pick<T, K> ? never : K
+}[keyof T]
+
+export declare type TruthyKeys<T> = {
   [key in keyof T]: T[key] extends false | undefined | null ? never : key
 }[keyof T]
+
+export declare type TrueKeys<T> = TruthyKeys<Pick<T, RequiredKeys<T>>>
 
 /**
  * Subset
@@ -117,7 +122,7 @@ declare class PrismaClientFetcher {
   private readonly debug;
   private readonly hooks?;
   constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
-  request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string, collectTimestamps?: any): Promise<T>;
+  request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
   sanitizeMessage(message: string): string;
   protected unpack(document: any, data: any, path: string[], rootField?: string, isList?: boolean): any;
 }
@@ -196,6 +201,39 @@ export type LogEvent = {
 }
 /* End Types for Logging */
 
+
+export type Action =
+  | 'findOne'
+  | 'findMany'
+  | 'create'
+  | 'update'
+  | 'updateMany'
+  | 'upsert'
+  | 'delete'
+  | 'deleteMany'
+  | 'executeRaw'
+  | 'queryRaw'
+  | 'aggregate'
+
+/**
+ * These options are being passed in to the middleware as "params"
+ */
+export type MiddlewareParams = {
+  model?: string
+  action: Action
+  args: any
+  dataPath: string[]
+  runInTransaction: boolean
+}
+
+/**
+ * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
+ */
+export type Middleware<T = any> = (
+  params: MiddlewareParams,
+  next: (params: MiddlewareParams) => Promise<T>,
+) => Promise<T>
+
 // tested in getLogLevel.test.ts
 export declare function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
 
@@ -265,19 +303,33 @@ export declare class PrismaClient<
    * Read more in our [docs](https://github.com/prisma/prisma/blob/master/docs/prisma-client-js/api.md).
    */
   constructor(optionsArg?: T);
+  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? QueryEvent : LogEvent) => void): void;
+  /**
+   * @deprecated renamed to `$on`
+   */
   on<V extends U>(eventType: V, callback: (event: V extends 'query' ? QueryEvent : LogEvent) => void): void;
   /**
    * Connect with the database
    */
-  connect(): Promise<void>;
+  $connect(): Promise<void>;
   /**
-   * @private
+   * @deprecated renamed to `$connect`
    */
-  private runDisconnect;
+  connect(): Promise<void>;
+
   /**
    * Disconnect from the database
    */
+  $disconnect(): Promise<any>;
+  /**
+   * @deprecated renamed to `$disconnect`
+   */
   disconnect(): Promise<any>;
+
+  /**
+   * Add a middleware
+   */
+  $use(cb: Middleware): void
 
   /**
    * Executes a raw query and returns the number of affected rows
@@ -291,6 +343,11 @@ export declare class PrismaClient<
   * 
   * Read more in our [docs](https://github.com/prisma/prisma/blob/master/docs/prisma-client-js/api.md#raw-database-access).
   */
+  $executeRaw<T = any>(query: string | TemplateStringsArray, ...values: any[]): Promise<number>;
+
+  /**
+   * @deprecated renamed to `$executeRaw`
+   */
   executeRaw<T = any>(query: string | TemplateStringsArray, ...values: any[]): Promise<number>;
 
   /**
@@ -305,6 +362,11 @@ export declare class PrismaClient<
   * 
   * Read more in our [docs](https://github.com/prisma/prisma/blob/master/docs/prisma-client-js/api.md#raw-database-access).
   */
+  $queryRaw<T = any>(query: string | TemplateStringsArray, ...values: any[]): Promise<T>;
+ 
+  /**
+   * @deprecated renamed to `$executeRaw`
+   */
   queryRaw<T = any>(query: string | TemplateStringsArray, ...values: any[]): Promise<T>;
 
   /**
@@ -337,12 +399,46 @@ export declare class PrismaClient<
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-export declare const OrderByArg: {
+export declare const QueryMode: {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+export declare type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export declare const SortOrder: {
   asc: 'asc',
   desc: 'desc'
 };
 
-export declare type OrderByArg = (typeof OrderByArg)[keyof typeof OrderByArg]
+export declare type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export declare const RecordDistinctFieldEnum: {
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  customdate: 'customdate',
+  id: 'id',
+  isOnSale: 'isOnSale',
+  location: 'location',
+  price: 'price',
+  product: 'product',
+  quantity: 'quantity',
+  unit: 'unit'
+};
+
+export declare type RecordDistinctFieldEnum = (typeof RecordDistinctFieldEnum)[keyof typeof RecordDistinctFieldEnum]
+
+
+export declare const UserDistinctFieldEnum: {
+  createdAt: 'createdAt',
+  email: 'email',
+  id: 'id',
+  password: 'password'
+};
+
+export declare type UserDistinctFieldEnum = (typeof UserDistinctFieldEnum)[keyof typeof UserDistinctFieldEnum]
 
 
 
@@ -362,6 +458,80 @@ export type Record = {
   quantity: string
   unit: string
 }
+
+
+export type AggregateRecord = {
+  count: number
+  avg: RecordAvgAggregateOutputType | null
+  sum: RecordSumAggregateOutputType | null
+  min: RecordMinAggregateOutputType | null
+  max: RecordMaxAggregateOutputType | null
+}
+
+export type RecordAvgAggregateOutputType = {
+  authorId: number
+  id: number
+}
+
+export type RecordSumAggregateOutputType = {
+  authorId: number
+  id: number
+}
+
+export type RecordMinAggregateOutputType = {
+  authorId: number
+  id: number
+}
+
+export type RecordMaxAggregateOutputType = {
+  authorId: number
+  id: number
+}
+
+
+export type RecordAvgAggregateInputType = {
+  authorId?: true
+  id?: true
+}
+
+export type RecordSumAggregateInputType = {
+  authorId?: true
+  id?: true
+}
+
+export type RecordMinAggregateInputType = {
+  authorId?: true
+  id?: true
+}
+
+export type RecordMaxAggregateInputType = {
+  authorId?: true
+  id?: true
+}
+
+export type AggregateRecordArgs = {
+  where?: RecordWhereInput
+  orderBy?: Enumerable<RecordOrderByInput>
+  cursor?: RecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Enumerable<RecordDistinctFieldEnum>
+  count?: true
+  avg?: RecordAvgAggregateInputType
+  sum?: RecordSumAggregateInputType
+  min?: RecordMinAggregateInputType
+  max?: RecordMaxAggregateInputType
+}
+
+export type GetRecordAggregateType<T extends AggregateRecordArgs> = {
+  [P in keyof T]: P extends 'count' ? number : GetRecordAggregateScalarType<T[P]>
+}
+
+export type GetRecordAggregateScalarType<T extends any> = {
+  [P in keyof T]: P extends keyof RecordAvgAggregateOutputType ? RecordAvgAggregateOutputType[P] : never
+}
+    
+    
 
 export type RecordSelect = {
   authorId?: boolean
@@ -540,9 +710,14 @@ export interface RecordDelegate {
     args: Subset<T, RecordUpsertArgs>
   ): CheckSelect<T, Prisma__RecordClient<Record>, Prisma__RecordClient<RecordGetPayload<T>>>
   /**
-   * 
+   * Count
    */
   count(args?: Omit<FindManyRecordArgs, 'select' | 'include'>): Promise<number>
+
+  /**
+   * Aggregate
+   */
+  aggregate<T extends AggregateRecordArgs>(args: Subset<T, AggregateRecordArgs>): Promise<GetRecordAggregateType<T>>
 }
 
 /**
@@ -564,7 +739,6 @@ export declare class Prisma__RecordClient<T> implements Promise<T> {
   private _isList;
   private _callsite;
   private _requestPromise?;
-  private _collectTimestamps?;
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
   readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
@@ -633,7 +807,7 @@ export type FindManyRecordArgs = {
   /**
    * Determine the order of the Records to fetch.
   **/
-  orderBy?: RecordOrderByInput
+  orderBy?: Enumerable<RecordOrderByInput>
   /**
    * Sets the position for listing Records.
   **/
@@ -646,6 +820,7 @@ export type FindManyRecordArgs = {
    * Skip the first `n` Records.
   **/
   skip?: number
+  distinct?: Enumerable<RecordDistinctFieldEnum>
 }
 
 
@@ -780,6 +955,72 @@ export type User = {
   id: number
   password: string
 }
+
+
+export type AggregateUser = {
+  count: number
+  avg: UserAvgAggregateOutputType | null
+  sum: UserSumAggregateOutputType | null
+  min: UserMinAggregateOutputType | null
+  max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  id: number
+}
+
+export type UserSumAggregateOutputType = {
+  id: number
+}
+
+export type UserMinAggregateOutputType = {
+  id: number
+}
+
+export type UserMaxAggregateOutputType = {
+  id: number
+}
+
+
+export type UserAvgAggregateInputType = {
+  id?: true
+}
+
+export type UserSumAggregateInputType = {
+  id?: true
+}
+
+export type UserMinAggregateInputType = {
+  id?: true
+}
+
+export type UserMaxAggregateInputType = {
+  id?: true
+}
+
+export type AggregateUserArgs = {
+  where?: UserWhereInput
+  orderBy?: Enumerable<UserOrderByInput>
+  cursor?: UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Enumerable<UserDistinctFieldEnum>
+  count?: true
+  avg?: UserAvgAggregateInputType
+  sum?: UserSumAggregateInputType
+  min?: UserMinAggregateInputType
+  max?: UserMaxAggregateInputType
+}
+
+export type GetUserAggregateType<T extends AggregateUserArgs> = {
+  [P in keyof T]: P extends 'count' ? number : GetUserAggregateScalarType<T[P]>
+}
+
+export type GetUserAggregateScalarType<T extends any> = {
+  [P in keyof T]: P extends keyof UserAvgAggregateOutputType ? UserAvgAggregateOutputType[P] : never
+}
+    
+    
 
 export type UserSelect = {
   createdAt?: boolean
@@ -952,9 +1193,14 @@ export interface UserDelegate {
     args: Subset<T, UserUpsertArgs>
   ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
   /**
-   * 
+   * Count
    */
   count(args?: Omit<FindManyUserArgs, 'select' | 'include'>): Promise<number>
+
+  /**
+   * Aggregate
+   */
+  aggregate<T extends AggregateUserArgs>(args: Subset<T, AggregateUserArgs>): Promise<GetUserAggregateType<T>>
 }
 
 /**
@@ -976,7 +1222,6 @@ export declare class Prisma__UserClient<T> implements Promise<T> {
   private _isList;
   private _callsite;
   private _requestPromise?;
-  private _collectTimestamps?;
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
   readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
@@ -1045,7 +1290,7 @@ export type FindManyUserArgs = {
   /**
    * Determine the order of the Users to fetch.
   **/
-  orderBy?: UserOrderByInput
+  orderBy?: Enumerable<UserOrderByInput>
   /**
    * Sets the position for listing Users.
   **/
@@ -1058,6 +1303,7 @@ export type FindManyUserArgs = {
    * Skip the first `n` Users.
   **/
   skip?: number
+  distinct?: Enumerable<UserDistinctFieldEnum>
 }
 
 
@@ -1187,36 +1433,172 @@ export type UserArgs = {
  */
 
 
+export type NestedIntFilter = {
+  equals?: number
+  in?: Enumerable<number>
+  notIn?: Enumerable<number>
+  lt?: number
+  lte?: number
+  gt?: number
+  gte?: number
+  not?: NestedIntFilter
+}
+
+export type IntFilter = {
+  equals?: number
+  in?: Enumerable<number>
+  notIn?: Enumerable<number>
+  lt?: number
+  lte?: number
+  gt?: number
+  gte?: number
+  not?: number | NestedIntFilter
+}
+
+export type NestedDateTimeFilter = {
+  equals?: Date | string
+  in?: Enumerable<Date | string>
+  notIn?: Enumerable<Date | string>
+  lt?: Date | string
+  lte?: Date | string
+  gt?: Date | string
+  gte?: Date | string
+  not?: NestedDateTimeFilter
+}
+
+export type DateTimeFilter = {
+  equals?: Date | string
+  in?: Enumerable<Date | string>
+  notIn?: Enumerable<Date | string>
+  lt?: Date | string
+  lte?: Date | string
+  gt?: Date | string
+  gte?: Date | string
+  not?: Date | string | NestedDateTimeFilter
+}
+
+export type NestedDateTimeNullableFilter = {
+  equals?: Date | string | null
+  in?: Enumerable<Date | string> | null
+  notIn?: Enumerable<Date | string> | null
+  lt?: Date | string | null
+  lte?: Date | string | null
+  gt?: Date | string | null
+  gte?: Date | string | null
+  not?: NestedDateTimeNullableFilter
+}
+
+export type DateTimeNullableFilter = {
+  equals?: Date | string | null
+  in?: Enumerable<Date | string> | null
+  notIn?: Enumerable<Date | string> | null
+  lt?: Date | string | null
+  lte?: Date | string | null
+  gt?: Date | string | null
+  gte?: Date | string | null
+  not?: Date | string | NestedDateTimeNullableFilter | null
+}
+
+export type NestedBoolFilter = {
+  equals?: boolean
+  not?: NestedBoolFilter
+}
+
+export type BoolFilter = {
+  equals?: boolean
+  not?: boolean | NestedBoolFilter
+}
+
+export type NestedStringFilter = {
+  equals?: string
+  in?: Enumerable<string>
+  notIn?: Enumerable<string>
+  lt?: string
+  lte?: string
+  gt?: string
+  gte?: string
+  contains?: string
+  startsWith?: string
+  endsWith?: string
+  not?: NestedStringFilter
+}
+
+export type StringFilter = {
+  equals?: string
+  in?: Enumerable<string>
+  notIn?: Enumerable<string>
+  lt?: string
+  lte?: string
+  gt?: string
+  gte?: string
+  contains?: string
+  startsWith?: string
+  endsWith?: string
+  mode?: QueryMode
+  not?: string | NestedStringFilter
+}
+
+export type RecordListRelationFilter = {
+  every?: RecordWhereInput
+  some?: RecordWhereInput
+  none?: RecordWhereInput
+}
+
 export type UserWhereInput = {
+  AND?: Enumerable<UserWhereInput>
+  OR?: Array<UserWhereInput>
+  NOT?: Enumerable<UserWhereInput>
   createdAt?: Date | string | DateTimeFilter
   email?: string | StringFilter
   id?: number | IntFilter
   password?: string | StringFilter
-  record?: RecordFilter | null
-  AND?: Enumerable<UserWhereInput>
-  OR?: Array<UserWhereInput>
-  NOT?: Enumerable<UserWhereInput>
+  record?: RecordListRelationFilter
+}
+
+export type UserRelationFilter = {
+  is?: UserWhereInput | null
+  isNot?: UserWhereInput | null
 }
 
 export type RecordWhereInput = {
+  AND?: Enumerable<RecordWhereInput>
+  OR?: Array<RecordWhereInput>
+  NOT?: Enumerable<RecordWhereInput>
   authorId?: number | IntFilter
   createdAt?: Date | string | DateTimeFilter
-  customdate?: Date | string | NullableDateTimeFilter | null
+  customdate?: Date | string | DateTimeNullableFilter | null
   id?: number | IntFilter
-  isOnSale?: boolean | BooleanFilter
+  isOnSale?: boolean | BoolFilter
   location?: string | StringFilter
   price?: string | StringFilter
   product?: string | StringFilter
   quantity?: string | StringFilter
   unit?: string | StringFilter
-  AND?: Enumerable<RecordWhereInput>
-  OR?: Array<RecordWhereInput>
-  NOT?: Enumerable<RecordWhereInput>
   user?: UserWhereInput | null
+}
+
+export type RecordOrderByInput = {
+  authorId?: SortOrder
+  createdAt?: SortOrder
+  customdate?: SortOrder
+  id?: SortOrder
+  isOnSale?: SortOrder
+  location?: SortOrder
+  price?: SortOrder
+  product?: SortOrder
+  quantity?: SortOrder
+  unit?: SortOrder
 }
 
 export type RecordWhereUniqueInput = {
   id?: number
+}
+
+export type UserOrderByInput = {
+  createdAt?: SortOrder
+  email?: SortOrder
+  id?: SortOrder
+  password?: SortOrder
 }
 
 export type UserWhereUniqueInput = {
@@ -1250,7 +1632,6 @@ export type RecordCreateInput = {
 export type UserUpdateWithoutRecordDataInput = {
   createdAt?: Date | string
   email?: string
-  id?: number
   password?: string
 }
 
@@ -1269,20 +1650,18 @@ export type UserUpdateOneRequiredWithoutRecordInput = {
 export type RecordUpdateInput = {
   createdAt?: Date | string
   customdate?: Date | string | null
-  id?: number
   isOnSale?: boolean
   location?: string
   price?: string
   product?: string
   quantity?: string
   unit?: string
-  user?: UserUpdateOneRequiredWithoutRecordInput | null
+  user?: UserUpdateOneRequiredWithoutRecordInput
 }
 
 export type RecordUpdateManyMutationInput = {
   createdAt?: Date | string
   customdate?: Date | string | null
-  id?: number
   isOnSale?: boolean
   location?: string
   price?: string
@@ -1311,13 +1690,12 @@ export type UserCreateInput = {
   createdAt?: Date | string
   email: string
   password: string
-  record?: RecordCreateManyWithoutUserInput | null
+  record?: RecordCreateManyWithoutUserInput
 }
 
 export type RecordUpdateWithoutUserDataInput = {
   createdAt?: Date | string
   customdate?: Date | string | null
-  id?: number
   isOnSale?: boolean
   location?: string
   price?: string
@@ -1332,25 +1710,24 @@ export type RecordUpdateWithWhereUniqueWithoutUserInput = {
 }
 
 export type RecordScalarWhereInput = {
+  AND?: Enumerable<RecordScalarWhereInput>
+  OR?: Array<RecordScalarWhereInput>
+  NOT?: Enumerable<RecordScalarWhereInput>
   authorId?: number | IntFilter
   createdAt?: Date | string | DateTimeFilter
-  customdate?: Date | string | NullableDateTimeFilter | null
+  customdate?: Date | string | DateTimeNullableFilter | null
   id?: number | IntFilter
-  isOnSale?: boolean | BooleanFilter
+  isOnSale?: boolean | BoolFilter
   location?: string | StringFilter
   price?: string | StringFilter
   product?: string | StringFilter
   quantity?: string | StringFilter
   unit?: string | StringFilter
-  AND?: Enumerable<RecordScalarWhereInput>
-  OR?: Array<RecordScalarWhereInput>
-  NOT?: Enumerable<RecordScalarWhereInput>
 }
 
 export type RecordUpdateManyDataInput = {
   createdAt?: Date | string
   customdate?: Date | string | null
-  id?: number
   isOnSale?: boolean
   location?: string
   price?: string
@@ -1385,94 +1762,14 @@ export type RecordUpdateManyWithoutUserInput = {
 export type UserUpdateInput = {
   createdAt?: Date | string
   email?: string
-  id?: number
   password?: string
-  record?: RecordUpdateManyWithoutUserInput | null
+  record?: RecordUpdateManyWithoutUserInput
 }
 
 export type UserUpdateManyMutationInput = {
   createdAt?: Date | string
   email?: string
-  id?: number
   password?: string
-}
-
-export type DateTimeFilter = {
-  equals?: Date | string
-  not?: Date | string | DateTimeFilter
-  in?: Enumerable<Date | string>
-  notIn?: Enumerable<Date | string>
-  lt?: Date | string
-  lte?: Date | string
-  gt?: Date | string
-  gte?: Date | string
-}
-
-export type StringFilter = {
-  equals?: string
-  not?: string | StringFilter
-  in?: Enumerable<string>
-  notIn?: Enumerable<string>
-  lt?: string
-  lte?: string
-  gt?: string
-  gte?: string
-  contains?: string
-  startsWith?: string
-  endsWith?: string
-}
-
-export type IntFilter = {
-  equals?: number
-  not?: number | IntFilter
-  in?: Enumerable<number>
-  notIn?: Enumerable<number>
-  lt?: number
-  lte?: number
-  gt?: number
-  gte?: number
-}
-
-export type RecordFilter = {
-  every?: RecordWhereInput
-  some?: RecordWhereInput
-  none?: RecordWhereInput
-}
-
-export type NullableDateTimeFilter = {
-  equals?: Date | string | null
-  not?: Date | string | null | NullableDateTimeFilter
-  in?: Enumerable<Date | string> | null
-  notIn?: Enumerable<Date | string> | null
-  lt?: Date | string | null
-  lte?: Date | string | null
-  gt?: Date | string | null
-  gte?: Date | string | null
-}
-
-export type BooleanFilter = {
-  equals?: boolean
-  not?: boolean | BooleanFilter
-}
-
-export type RecordOrderByInput = {
-  authorId?: OrderByArg | null
-  createdAt?: OrderByArg | null
-  customdate?: OrderByArg | null
-  id?: OrderByArg | null
-  isOnSale?: OrderByArg | null
-  location?: OrderByArg | null
-  price?: OrderByArg | null
-  product?: OrderByArg | null
-  quantity?: OrderByArg | null
-  unit?: OrderByArg | null
-}
-
-export type UserOrderByInput = {
-  createdAt?: OrderByArg | null
-  email?: OrderByArg | null
-  id?: OrderByArg | null
-  password?: OrderByArg | null
 }
 
 /**

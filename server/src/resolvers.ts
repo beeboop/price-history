@@ -25,8 +25,8 @@ const resolvers = {
       const records = await prisma.user.findOne({ where: { id: userId }}).record({
         where: {
           OR: [
-            { product: { contains: filter }},
-            { location: { contains: filter }},
+            { product: { contains: filter, mode: 'insensitive' }},
+            { location: { contains: filter, mode: 'insensitive' }},
           ],
         },
         orderBy: orderBy,
