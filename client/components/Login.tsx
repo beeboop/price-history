@@ -1,7 +1,7 @@
 
 import { useRouter } from 'next/router'
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Formik, Form, Field } from "formik";

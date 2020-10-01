@@ -1,6 +1,6 @@
 import React from "react";
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -78,7 +78,30 @@ const formatYyyyDashMmDashDd = (date: Date): string => {
 
 export default function AddRecordDialog({ open, handleClose }) {
   const classes = useStyles();
-  const [createRecord] = useMutation(CREATE_RECORD);
+  const [createRecord] = useMutation(CREATE_RECORD, {
+    update: (cache, data) => {
+      const createRecord = data?.data?.createRecord;
+      console.log('cache', cache);
+      console.log('data', data);
+
+      // cache.modify({
+      //   fields: {
+      //     todos(existingTodos = []) {
+      //       const newTodoRef = cache.writeFragment({
+      //         data: addTodo,
+      //         fragment: gql`
+      //           fragment NewTodo on Todo {
+      //             id
+      //             type
+      //           }
+      //         `
+      //       });
+      //       return [...existingTodos, newTodoRef];
+      //     }
+      //   }
+      // });
+    }
+  });
   const now = new Date();
 
   return (
@@ -104,7 +127,7 @@ export default function AddRecordDialog({ open, handleClose }) {
             },
           });
           handleClose();
-          setTimeout(() => location.reload(), 500);
+          // setTimeout(() => location.reload(), 500);
         }}
       >
         {({ errors, touched, isSubmitting }) => (

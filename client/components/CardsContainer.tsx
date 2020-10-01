@@ -1,6 +1,5 @@
 import React from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import classNames from 'classnames';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

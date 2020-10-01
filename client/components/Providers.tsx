@@ -1,17 +1,12 @@
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { AUTH_TOKEN } from '../utils/constants';
 import withAuth from './isAuthed';
 
 const client = new ApolloClient({
+  cache: new InMemoryCache(),
   uri: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:4000/',
-  request: (operation) => {
-    const token = localStorage.getItem(AUTH_TOKEN);
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    });
+  headers: {
+    authorization: typeof window !== 'undefined' && localStorage.getItem(AUTH_TOKEN) ? `Bearer ${localStorage.getItem(AUTH_TOKEN)}` : '',
   }
 });
 
