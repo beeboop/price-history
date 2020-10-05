@@ -94,7 +94,7 @@ export default function CardsContainer({
 
   if (loading) return <p>Loading...</p>;
   if (error) {
-    if (error.message === 'jwt expired') {
+    if (error.message === 'jwt expired' || error.message === 'Not authenticated') {
       localStorage.removeItem(AUTH_TOKEN);
       if (router.pathname !== '/login') router.push('/login');
       return null;

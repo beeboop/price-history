@@ -24,6 +24,12 @@ const CREATE_RECORD = gql`
       message
       record {
         id
+        product
+        location
+        price
+        quantity
+        unit
+        date
       }
     }
   }
@@ -80,26 +86,33 @@ export default function AddRecordDialog({ open, handleClose }) {
   const classes = useStyles();
   const [createRecord] = useMutation(CREATE_RECORD, {
     update: (cache, data) => {
-      const createRecord = data?.data?.createRecord;
-      console.log('cache', cache);
-      console.log('data', data);
+      const newRecord = data?.data?.createRecord?.record;
+      cache.modify({
+        fields: {
+          records(existingRecords, { readField }) {
+            const newRecordRef = cache.writeFragment({
+              data: newRecord,
+              fragment: gql`
+                fragment NewRecord on Record {
+                  id
+                  product
+                  location
+                  price
+                  quantity
+                  unit
+                  date
+                }
+              `
+            });
 
-      // cache.modify({
-      //   fields: {
-      //     todos(existingTodos = []) {
-      //       const newTodoRef = cache.writeFragment({
-      //         data: addTodo,
-      //         fragment: gql`
-      //           fragment NewTodo on Todo {
-      //             id
-      //             type
-      //           }
-      //         `
-      //       });
-      //       return [...existingTodos, newTodoRef];
-      //     }
-      //   }
-      // });
+            if (existingRecords.some(ref => readField('id', ref) === newRecord.id)) {
+              return existingRecords;
+            }
+      
+            return [newRecordRef, ...existingRecords];
+          }
+        }
+      });
     }
   });
   const now = new Date();
@@ -127,7 +140,6 @@ export default function AddRecordDialog({ open, handleClose }) {
             },
           });
           handleClose();
-          // setTimeout(() => location.reload(), 500);
         }}
       >
         {({ errors, touched, isSubmitting }) => (

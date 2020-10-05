@@ -87,7 +87,10 @@ const resolvers = {
 
         return {
           success: true,
-          record,
+          record: {
+            ...record,
+            date: record.customdate || record.createdAt || 0,
+          },
         };
       } catch (e) {
         return {
@@ -107,7 +110,10 @@ const resolvers = {
         });
         return {
           success: true,
-          record,
+          record: {
+            ...record,
+            date: record.customdate || record.createdAt || 0,
+          },
         }
       } catch (e) {
         return {
