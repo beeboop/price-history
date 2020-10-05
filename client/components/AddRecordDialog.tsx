@@ -49,7 +49,7 @@ const RecordSchema = Yup.object().shape({
     .positive('Invalid')
     .required("Required"),
   unit: Yup.string()
-    .min(2, "Too Short!")
+    .min(1, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
   date: Yup.string()

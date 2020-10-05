@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import classNames from 'classnames';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -6,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from './Card';
 import createRecordProps from '../utils/createRecordProps';
+import { AUTH_TOKEN } from '../utils/constants';
 
 const ALL_RECORDS = gql`
   query Records($filter: String) {
@@ -55,6 +57,7 @@ type CardsContainerProps = {
 export default function CardsContainer({
   filter
 }: CardsContainerProps) {
+  const router = useRouter();
   const classes = useStyles();
   const [selectedRecords, setSelectedRecords] = React.useState(new Set());
   const { loading, error, data } = useQuery(ALL_RECORDS, {
@@ -90,7 +93,14 @@ export default function CardsContainer({
   }
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error...</p>;
+  if (error) {
+    if (error.message === 'jwt expired') {
+      localStorage.removeItem(AUTH_TOKEN);
+      if (router.pathname !== '/login') router.push('/login');
+      return null;
+    }
+    return <p>{ `error: ${error.message}` }</p>;
+  }
 
   return (
     <>

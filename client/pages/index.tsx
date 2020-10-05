@@ -34,7 +34,7 @@ export default function Home() {
   }, []);
 
   if (loginState === 'LOADING') {
-    return 'Loading';
+    return null;
   }
 
   if (loginState === 'NOT_LOGGED_IN') {
